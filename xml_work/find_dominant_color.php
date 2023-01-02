@@ -21,7 +21,9 @@ $colors = [
 '#FFE4C4', # Pearl
 '#800000' # Burgundy
 ];
-
+if (!is_dir($cacheDir)) {
+  mkdir($cacheDir);
+}
 // Function to calculate the distance between two colors in RGB space
 function colorDistance($color1, $color2) {
   $r1 = hexdec(substr($color1, 1, 2));
@@ -56,7 +58,14 @@ $total = count($xml->product); // Get the total number of products
   echo $total;
 // Iterate over each product in the XML file
 foreach ($xml->product as $product) {
-  // Get the first image for the product
+  $ttl = 3600;
+  $cacheFile = 'cache/' . md5($product->id) . '.cache';
+  if (file_exists($cacheFile) && time() - $ttl < filemtime($cacheFile)) {
+  // Read the cached output and add it to the $closestColors array
+  $closestColors = unserialize(file_get_contents($cacheFile));
+  // Skip the rest of the loop
+  continue;
+  }
   if (isset($product->images)) {
     $imageUrl = (string)$product->images->image[0];
   } else {
@@ -66,7 +75,7 @@ foreach ($xml->product as $product) {
   if (!$imageUrl || !@getimagesize($imageUrl)) {
     continue;
   }
-  if ($num > $total) {
+  if ($num > 15000) {
     break;
   }
   // Get the color palette for the image
@@ -101,7 +110,7 @@ foreach ($xml->product as $product) {
   $colors = array_map(function($color) {
     return sprintf('#%02x%02x%02x', $color[0], $color[1], $color[2]);
   }, $palette);
-
+  file_put_contents($cacheFile, serialize($closestColors));
   // Save the colors as a comma-separated list in the <producer> element
   $num = $num + 1;
   $product->pattern = implode(',', $closestColors);
