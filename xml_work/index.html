@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link href='https://fonts.googleapis.com/css?family=OVO' rel='stylesheet'>
+  <title>XML MANIPULATION</title>
+</head>
+<body>
+ <div class="logo">IDYL LTD</div>
+  <ol>
+    <li class="step">
+      <button onclick="loadIframe('download_xml.php')">Download feed</button>
+      <div class="step-description">
+        Download xml into your server
+      </div>
+    </li>
+    <li class="step">
+      <button onclick="loadIframe('update_desc.php')">Update description</button>
+
+      <div class="step-description">
+        Update description according to category
+      </div>
+    </li>
+    <li class="step">
+      <button onclick="loadIframe('update_price.php')">Update Price</button>
+
+      <div class="step-description">
+       Update price according to formula
+      </div>
+    </li>
+    <li class="step">
+     <button onclick="loadIframe('round_price.php')">Round Price</button>
+
+      <div class="step-description">
+       Round prices according to formula
+      </div>
+    </li>
+    <li class="step">
+      <button onclick="loadIframe('tags.php')">Update Tags</button>
+
+      <div class="step-description">
+       Update tags to greek
+      </div>
+    </li>
+    <li class="step">
+      <button onclick="loadIframe('find_dominant_color.php')">Find Color</button>
+
+      <div class="step-description">
+        Run this dirrectly from server <b> php find_dominant_color.php</b>
+      </div>
+    </li>
+  </ol>
+  <p>*Run all codes mostly from server dirrectly. This is for testing and keeping track of project.</p>
+  <iframe></iframe>
+</body>
+<script>function loadIframe(src) {
+  const iframe = document.querySelector('iframe');
+  iframe.src = src;
+  // Disable the button that was clicked
+  this.disabled = true;
+  iframe.addEventListener('load', () => {
+    // Enable the next button
+    iframe.previousElementSibling.nextElementSibling.disabled = false;
+  });
+}
+</script>
+</html>
