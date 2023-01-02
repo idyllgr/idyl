@@ -1,2 +1,1 @@
-# idyl
-Idyl server
+# IDYL LTD Open World
