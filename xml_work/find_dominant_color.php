@@ -53,7 +53,6 @@ try {
 
 use ColorThief\ColorThief;
 $total = count($xml->product); // Get the total number of products
-
   echo $total;
 // Iterate over each product in the XML file
 foreach ($xml->product as $product) {
@@ -67,7 +66,9 @@ foreach ($xml->product as $product) {
   if (!$imageUrl || !@getimagesize($imageUrl)) {
     continue;
   }
-
+  if ($num > $total) {
+    break;
+  }
   // Get the color palette for the image
   try {
     $palette = ColorThief::getPalette($imageUrl, 5);
