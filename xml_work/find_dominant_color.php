@@ -71,6 +71,12 @@ foreach ($xml->product as $product) {
   } else {
     $imageUrl = null;
   }
+  if (!$imageUrl) {
+   // Check if the first variant has an image
+    if (isset($product->variants->variant[0]->images)) {
+      $imageUrl = (string)$product->variants->variant[0]->images->image[0];
+   }
+  }
   // If the image doesn't exist or the URL is not accessible, skip this product
   if (!$imageUrl || !@getimagesize($imageUrl)) {
     continue;
