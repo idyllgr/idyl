@@ -114,7 +114,7 @@ foreach ($xml->product as $product) {
   // Save the colors as a comma-separated list in the <producer> element
   $num = $num + 1;
   $product->pattern = implode(',', $closestColors);
-  echo $num . "%\n";
+  echo $num . "" . $imageUrl . "" . $closestColors . "\n";
   $num++;
 }
 
