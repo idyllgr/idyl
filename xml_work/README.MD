@@ -1,8 +1,8 @@
 <img alt="" src="https://cdn.shopify.com/s/files/1/0675/6928/7480/files/75.png?v=1668132496" style="float:right" />
-<b>Small XML work for product feed<br/></b>
+<b>Small XML work for product feed<br/></b> 
 Change description, price update, find colors etc</p>
 <br>
-<b>Basic manipulation XML</b>
+<b>Basic manipulation XML</b> <br>
 1. Change specific areas from a XML using php. <br>
 2. Calculate with your own formula some places of the XML. <br>
 <b>Advanced Color </b><br>
