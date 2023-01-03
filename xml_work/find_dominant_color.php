@@ -21,10 +21,7 @@ $colors = [
 '#FFE4C4', # Pearl
 '#800000' # Burgundy
 ];
-if (!is_dir($cacheDir)) {
-  mkdir($cacheDir);
-}
-// Function to calculate the distance between two colors in RGB space
+
 function colorDistance($color1, $color2) {
   $r1 = hexdec(substr($color1, 1, 2));
   $g1 = hexdec(substr($color1, 3, 2));
@@ -39,9 +36,7 @@ $num = 0;
 try {
   $xml = simplexml_load_file('feed.xml');
 } catch (Exception $e) {
-  // Handle the error if the XML file cannot be loaded
   echo "Error loading XML file: " . $e->getMessage();
-  exit;
 }
 
 // Load the ColorThief library
@@ -50,22 +45,14 @@ try {
 } catch (Exception $e) {
   // Handle the error if the ColorThief library cannot be loaded
   echo "Error loading ColorThief library: " . $e->getMessage();
-  exit;
 }
 
 use ColorThief\ColorThief;
 $total = count($xml->product); // Get the total number of products
   echo $total;
-// Iterate over each product in the XML file
 foreach ($xml->product as $product) {
-  $ttl = 27000;
-  $cacheFile = 'cache/' . md5($product->id) . '.cache';
-  if (file_exists($cacheFile) && time() - $ttl < filemtime($cacheFile)) {
-  // Read the cached output and add it to the $closestColors array
-  $closestColors = unserialize(file_get_contents($cacheFile));
-  // Skip the rest of the loop
-  continue;
-  }
+
+ $closestColors = [];
   if (isset($product->images)) {
     $imageUrl = (string)$product->images->image[0];
   } else {
@@ -76,18 +63,17 @@ foreach ($xml->product as $product) {
       $imageUrl = null;
     }
   }
-  // If the image doesn't exist or the URL is not accessible, skip this product
-  if (!$imageUrl || !@getimagesize($imageUrl)) {
-    continue;
-  }
+
   if ($num > $total) {
     break;
   }
-  // Get the color palette for the image
+  if (!$imageUrl || !@getimagesize($imageUrl)) {
+    continue;
+  }
+
   try {
     $palette = ColorThief::getPalette($imageUrl, 5);
   } catch (Exception $e) {
-    // Handle the error if the palette cannot be extracted
     echo "Error extracting palette for image " . $imageUrl . ": " . $e->getMessage();
     continue;
   }
@@ -96,9 +82,6 @@ foreach ($xml->product as $product) {
 	$paletteColors = array_map(function($color) {
 	  return sprintf('#%02x%02x%02x', $color[0], $color[1], $color[2]);
 	}, $palette);
-
-	// Find the closest color in the array for each color in the palette
-	$closestColors = [];
 	foreach ($paletteColors as $paletteColor) {
 	  $minDistance = PHP_INT_MAX;
 	  $closestColor = null;
@@ -111,25 +94,24 @@ foreach ($xml->product as $product) {
 	  }
 	  $closestColors[] = $closestColor;
 	}
-  // Extract the hex values for the colors in the palette
+
   $colors = array_map(function($color) {
     return sprintf('#%02x%02x%02x', $color[0], $color[1], $color[2]);
   }, $palette);
-  file_put_contents($cacheFile, serialize($closestColors));
-  // Save the colors as a comma-separated list in the <producer> element
+
   $num = $num + 1;
-  $product->pattern = implode(',', $closestColors);
-  echo $num . "" . $imageUrl . "" . $closestColors . "\n";
+  $uniqueColors = array_unique($closestColors);
+  $domProduct = dom_import_simplexml($product);
+  $colorIdyll = $domProduct->ownerDocument->createElement('color_idyll', implode(',', $uniqueColors));
+  $domProduct->appendChild($colorIdyll);
+  echo $num . "%\n";
   $num++;
 }
 
-// Save the modified XML file
 try {
   $xml->asXML('modified-products.xml');
 } catch (Exception $e) {
-  // Handle the error if the XML file cannot be saved
   echo "Error saving XML file: " . $e->getMessage();
-  exit;
 }
 
 ?>
