@@ -58,7 +58,7 @@ $total = count($xml->product); // Get the total number of products
   echo $total;
 // Iterate over each product in the XML file
 foreach ($xml->product as $product) {
-  $ttl = 3600;
+  $ttl = 27000;
   $cacheFile = 'cache/' . md5($product->id) . '.cache';
   if (file_exists($cacheFile) && time() - $ttl < filemtime($cacheFile)) {
   // Read the cached output and add it to the $closestColors array
@@ -69,19 +69,18 @@ foreach ($xml->product as $product) {
   if (isset($product->images)) {
     $imageUrl = (string)$product->images->image[0];
   } else {
-    $imageUrl = null;
-  }
-  if (!$imageUrl) {
-   // Check if the first variant has an image
+    // If the product doesn't have any images, try to get the first image for the first variant
     if (isset($product->variants->variant[0]->images)) {
       $imageUrl = (string)$product->variants->variant[0]->images->image[0];
-   }
+    } else {
+      $imageUrl = null;
+    }
   }
   // If the image doesn't exist or the URL is not accessible, skip this product
   if (!$imageUrl || !@getimagesize($imageUrl)) {
     continue;
   }
-  if ($num > 15000) {
+  if ($num > $total) {
     break;
   }
   // Get the color palette for the image
