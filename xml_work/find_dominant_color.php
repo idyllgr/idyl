@@ -78,26 +78,25 @@ foreach ($xml->product as $product) {
     continue;
   }
 
-
 	$paletteColors = array_map(function($color) {
-	  return sprintf('#%02x%02x%02x', $color[0], $color[1], $color[2]);
+	return sprintf('#%02x%02x%02x', $color[0], $color[1], $color[2]);
 	}, $palette);
+
 	foreach ($paletteColors as $paletteColor) {
-	  $minDistance = PHP_INT_MAX;
-	  $closestColor = null;
-	  foreach ($colors as $color) {
-		$distance = colorDistance($paletteColor, $color);
-		if ($distance < $minDistance) {
-		  $minDistance = $distance;
-		  $closestColor = $color;
-		}
-	  }
-	  $closestColors[] = $closestColor;
+	$minDistance = PHP_INT_MAX;
+	$closestColor = null;
+	foreach ($colors as $color) {
+	$distance = colorDistance($paletteColor, $color);
+	if ($distance < $minDistance) {
+	$minDistance = $distance;
+	$closestColor = $color;
+	}
+	}
+	$closestColors[] = $closestColor;
 	}
 
-  $colors = array_map(function($color) {
-    return sprintf('#%02x%02x%02x', $color[0], $color[1], $color[2]);
-  }, $palette);
+	// Choose the first closest color
+	$colorToUse = $closestColors[0];
 
   $num = $num + 1;
   $uniqueColors = array_unique($closestColors);
