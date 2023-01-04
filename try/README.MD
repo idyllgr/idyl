@@ -4,4 +4,4 @@
 <br>
 <i>Place your posters into a wall using Angular</i>
 <p>Main files are in this Repository. /src/  </p> <br>
-<p>In case you need access to rest of source files contact us: info@idyll.gr</p>
+<p>In case you need access to rest of source files contact us: info@idyll.gr <b>ONLY TEAM-MEMBERS</b></p>
