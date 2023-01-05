@@ -11,3 +11,21 @@ In case products dont have a color for your thousand images on a XML file you ca
 use of a library<br> Install: <b>composer require ksubileau/color-thief-php</b>
 <br>
 <b>Modify code at your needs </b>
+
+DOC:
+Defines an array of colors stored as hex codes.
+Defines a function colorDistance that calculates the distance between two colors based on their red, green, and blue values.
+Tries to load an XML file called feed.xml. If it fails, it will print an error message.
+Loads the ColorThief library. If it fails, it will print an error message.
+Gets the total number of products in the XML file and stores it in the variable $total.
+Loops through each product in the XML file. For each product, it does the following:
+Tries to get the URL of the first image for the product. If the product doesn't have any images, it tries to get the first image for the first variant of the product instead. If the product or variant doesn't have any images, it sets the image URL to null.
+If the image URL is null or the image doesn't exist, it continues to the next product.
+Uses the ColorThief library to extract the 5 dominant colors in the image.
+Maps the extracted colors to hex codes and stores them in the array $paletteColors.
+For each color in $paletteColors, it finds the closest color in the array of colors defined at the beginning of the script. It stores all the closest colors in the array $closestColors.
+It sets the variable $colorToUse to the first element in $closestColors.
+It gets the unique colors in $closestColors and stores them in the array $uniqueColors.
+It updates the product's color field to be the value of $colorToUse.
+It increments the variable $num by 1.
+At the end, it prints the number of products that have been updated.
